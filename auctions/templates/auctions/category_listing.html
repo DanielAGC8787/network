@@ -1,0 +1,76 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style>
+    li{
+        list-style: none;
+    }
+    #image_div{
+        height: 200px;
+        width: 200px;
+    }
+    img{
+        height: 200px;
+        width: 200px;
+        object-fit: contain;
+    }
+    #listing_div{
+        display: flex;
+        border: 1px solid black;
+        width: 80%;
+    }
+    #listing_link{
+        height: 40px;
+        font-size: 30px;
+        color: black;
+    }
+    #listing_info1{
+        margin-left: 15px;
+    }
+</style>
+<h2>{{category}}</h2>
+<ul>
+    {% for listing in listings %}
+    {% if listing.category == category %}
+        <li>
+                <div id="listing_div">
+                    <div id="image_div">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'listing' listing.id %}">
+                            <img src="{{listing.image_url}}" alt="Image of :{{listing.name}}">
+                        </a>
+                        {% else %}
+                        <a href="{% url 'unauthorized_page' %}">
+                            <img src="{{listing.image_url}}" alt="Image of :{{listing.name}}">
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div id="listing_info1">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'listing' listing.id %}" id="listing_link">
+                            {{ listing.name }}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'unauthorized_page' %}" id="listing_link">
+                            {{ listing.name }}
+                            </a>
+                        {% endif %}
+                        </br>
+                        </br>
+                        <strong>Current Bid:</strong>
+                        {% if listing.highest_bid > listing.starting_bid %}
+<!--                        notice you can only use > operator if you are comparing two items of the same type. both of these are of listing. You cant compare to constant in this case-->
+                            ${{ listing.highest_bid }}.00
+                        {% else %}
+                            ${{listing.starting_bid}}.00
+                        {% endif %}
+                        </br>
+                        Description: {{listing.description}}
+                    </div>
+                </div>
+        </li>
+    {% endif %}
+{% endfor %}
+</ul>
+
+{% endblock %}

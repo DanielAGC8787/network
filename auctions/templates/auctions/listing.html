@@ -1,0 +1,134 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<style xmlns="http://www.w3.org/1999/html">
+
+        #image_div{
+            height: 200px;
+            width: 100%;
+        }
+        img{
+            height: 100%;
+            width: 100%;
+            object-fit: contain;
+        }
+        .price{
+            font-size: 24px;
+        }
+        #description{
+            margin-left: 15px;
+        }
+        .listing_info{
+            margin-left: 15px;
+            width: 50%;
+        }
+        .listing_page{
+            display: flex;
+        }
+        textarea{
+            width: 100%;
+            height: 100px;
+        }
+        .listing_comments{
+            width: 45%
+        }
+        li{
+            list-style: none;
+        }
+    </style>
+    <div class="listing_page">
+        <div class="listing_info">
+            <h2>Listing: {{listing.name}}</h2>
+            <div id="image_div">
+                <img src="{{listing.image_url}}" alt="{{listing.name}}">
+            </div>
+            <div>
+                {{listing.name}}
+                </br>
+                Posted By: {{listing.creator}}
+                <p class="price">
+                    <strong> Current Bid:</strong>
+                    {% if highest_bid > 1 %}
+                        ${{ highest_bid }}.00
+                    {% else %}
+                        ${{listing.starting_bid}}.00
+                    {% endif %}
+                </p>
+                <p>
+                    {% if highest_bid > 1 %}
+                        The Current Bid is held by: {{listing.highest_bid_holder}}
+                        </br> </br>
+                    {% endif %}
+                   {{num_bids}} bid(s) on this listing so far
+                </p>
+                {% if message %}
+                    <div> {{message}}</div>
+                {% endif %}
+
+                {% if listing.creator == user.username %}
+                    <form action="{% url 'close_listing' listing.id %}" method="POST">
+                        {% csrf_token %}
+                         <input type="submit" name="btn" value="Close Listing">
+                    </form>
+                {% else %}
+                    <h3>
+                        Submit a Bid:
+                    </h3>
+                    <form action="{% url 'bid' listing.id %}" method="POST">
+                        {% csrf_token %}
+                        {{bid_form.as_p}}
+                        <input type = "submit">
+                    </form>
+                {% endif%}
+                </br>
+                <p class="price">
+                    <strong>Description:</strong>
+                </p>
+                <p id="description">
+                    {{listing.description}}
+                </p>
+                <p>
+                    <strong class="price">Category:</strong>    {{listing.category}}
+                </p>
+            </div>
+        </div>
+        <div class="listing_comments">
+            {% if in_watchlist %}
+                <center>
+                    <form action="{% url 'remove_from_watchlist' listing.id %}" method="POST">
+                        {% csrf_token %}
+                         <input type="submit" name="btn" value="Remove From Watchlist">
+                    </form>
+                </center>
+            {% else %}
+                <center>
+                    <form action="{% url 'add_to_watchlist' listing.id %}" method="POST">
+                        {% csrf_token %}
+                         <input type="submit" name="btn" value="Add To Watchlist">
+                    </form>
+                </center>
+            {% endif %}
+            </br>
+            <h3>
+                All Listing Comments:
+            </h3>
+            <form action="{% url 'comment' listing.id %}" method="POST">
+                    {% csrf_token %}
+                    {{comment_form.as_p}}
+                    <input type = "submit">
+            </form>
+            <ul>
+                <hr>
+                {% for comment in comments %}
+                <li>
+                    <strong style="font-size: 14px">{{comment.user.username}}:</strong> </br>
+                    {{comment.comment}}
+                </li>
+                <hr>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+
+{% endblock %}
