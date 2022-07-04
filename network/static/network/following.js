@@ -1,0 +1,111 @@
+document.addEventListener('DOMContentLoaded', function(){
+    fetch("/following_list")
+    .then(response => response.json())
+    .then(posts => {
+        page_num = document.querySelector("#page_num").innerHTML
+        pagePosts = []
+        if (isNaN(page_num)){
+            page_num = 1 
+        } 
+        for (let i = (page_num*10)-10; i < page_num*10; i++){
+            pagePosts.push(posts[i])
+        }
+        console.log(pagePosts);
+        var liked_post
+        pagePosts.forEach(function callback(value, index){
+            const heart = document.createElement('div')
+            heart.setAttribute("class", "heart-like-button");
+            heart.setAttribute("id", "heart"+index);
+            document.querySelector('#container'+(index+1)).append(heart)
+
+            heart.addEventListener("click", () => {
+                if (heart.classList.contains("liked")) {
+                    heart.classList.remove("liked")
+                    dislikePost(posts[index].id, index);  
+                } else {
+                    heart.classList.add("liked")
+                    likePost(posts[index].id, index);
+                }
+            });
+        
+            liked_post = pagePosts[index].liked
+            if(liked_post){
+                document.querySelector('#heart'+index).classList.add('liked');
+            }
+        })
+    })
+});
+
+function unfollow(user){
+    fetch('/get_user/' + user)
+    .then(response => response.json())
+    .then(logUser => {
+        var followNum = logUser.followers.length
+        followNum--
+        fetch('/unfollow/' + logUser.username, {
+            method: 'DELETE'
+        })
+        document.querySelector('#followNum').innerHTML = followNum
+    })
+}
+
+function likePost(postID, index){
+    var postLikes;
+    fetch('/posts/' + postID)
+    .then(response => response.json())
+    .then(post => {
+        postLikes = post.likes;
+        postLikes++;
+        fetch('/posts/'+postID, {
+            method: 'PUT',
+                body: JSON.stringify({
+                    likes: postLikes,
+                    liked: true
+                })
+        })
+        document.querySelector('#like'+(index+1)).innerHTML = postLikes;
+    });
+}
+
+function dislikePost(postID, index){
+    var postLikes
+    fetch('/posts/' + postID)
+    .then(response => response.json())
+    .then(post => {
+        postLikes = post.likes;
+        postLikes--;
+        fetch('/posts/'+postID, {  
+            method: 'PUT',
+                body: JSON.stringify({
+                    likes: postLikes,
+                    liked: false
+                })
+        })
+        document.querySelector('#like'+(index+1)).innerHTML = postLikes;
+    });
+}
+
+function follow(followedUser){
+    fetch('/get_user/' + followedUser)
+    .then(response => response.json())
+    .then(logUser => {
+        var followNum = logUser.followers.length
+        followNum++;
+        fetch('/follow', {
+            method: 'POST',
+            body: JSON.stringify({
+                following : followedUser
+            })
+        });
+        document.querySelector('#followNum').innerHTML = followNum
+    })
+}
+
+function editPost(newPost, postID){
+    fetch('/posts/'+postID, {  
+        method: 'PUT',
+            body: JSON.stringify({
+                body: newPost
+            })
+    })
+}

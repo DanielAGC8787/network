@@ -1,0 +1,53 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class='post-space'>
+        <h1>All Posts</h1>
+        {% if user.is_authenticated %}
+        <div class='post'>
+            <form class='post-content' action="{% url 'create_post'%}" method="POST">
+                {% csrf_token %}
+                {% for field in form  %}
+                    {{ field.errors }}
+                    </br>
+                    <strong style="font-size:20px;" >New Post</strong>
+                    <br/>
+                    {{ field }}
+                {% endfor %}
+                </br>
+                <input id="post" type = "submit" value = 'Post'>
+                </br>
+                </br>
+            </form>
+        </div>
+        {%endif%}
+        </br>
+        {%with id_num=-1 %}
+        {%for post in page_obj %}
+            <div class="post">
+                <div class='post-content'>
+                    </br>
+                    <div class='nameNheart'>
+                        <a href="{% url "users" post.creator.username %}"><h2 style="font-size:20px;" >{{post.creator}}</h2></a>
+                        <div id="edit{{forloop.counter}}" class="editButtonSpace"></div>
+                        {% comment %} forloop.counter returns the number of times the loop has iterated {% endcomment %}
+                        <div class='container' id="container{{forloop.counter}}">
+                            {% comment %} <div class="heart-like-button" id ='heart{{id_num|add:"1"}}'></div> {% endcomment %}
+                        </div>
+                    </div>
+                    <p id="postBody{{forloop.counter}}">{{post.body}}</p>
+                    <p style="color:#929292;">{{post.timeStamp}}</p>
+                    Likes: <p style = "display:inline" id="like{{forloop.counter}}">{{post.likes}}</p>
+                </div>
+            </div>
+        </br>
+        {%endfor%}
+        {%endwith%}
+        
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/page.js' %}"></script>
+{% endblock %}

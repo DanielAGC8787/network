@@ -1,0 +1,55 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class='post-space'>
+        <h1>{{desiredUser.username}}</h1>
+
+        {%if user.is_authenticated%}
+            {% if user.username != desiredUser.username%}
+                {% if hasFollowed %}
+                    <button id="followButton">
+                        Unfollow
+                    </button>
+                {%else%}
+                    <button id="followButton" class="follow">
+                        Follow
+                    </button>
+                {%endif%}
+            {% endif %}
+        {%endif%}
+
+        <div id="follow-info">
+            <p>Following: {{following}}</p>
+            Followers: <p style = "display:inline" id="followNum">{{followers}}</p>
+        </div>
+        </br>
+        {%with id_num=-1 %}
+        {%for post in page_obj %}
+            <div class="post">
+                <div class='post-content'>
+                    </br>
+                    <div class='nameNheart'>
+                        <a href="{% url "users" post.creator.username %}"><h2 style="font-size:20px;" >{{post.creator}}</h2></a>
+                        <div id="edit{{forloop.counter}}" class="editButtonSpace"></div>
+                        {% comment %} forloop.counter returns the number of times the loop has iterated {% endcomment %}
+                        <div class='container' id="container{{forloop.counter}}">
+                            
+                            {% comment %} <div class="heart-like-button" id ='heart{{id_num|add:"1"}}'></div> {% endcomment %}
+                        </div>
+                    </div>
+                    <p>{{post.body}}</p>
+                    <p style="color:#929292;">{{post.timeStamp}}</p>
+                    Likes: <p style = "display:inline" id="like{{forloop.counter}}">{{post.likes}}</p>
+                </div>
+            </div>
+        </br>
+        {%endfor%}
+        {%endwith%}
+        
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script id="script_data" src="{% static 'network/user.js' %}" person = {{desiredUser.username}}></script>
+{% endblock %}

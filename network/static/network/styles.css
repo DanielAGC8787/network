@@ -1,0 +1,121 @@
+@charset "utf-8";
+.post-space{
+    margin-left: 50px;
+}
+
+.post{
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 80%;
+}
+
+textarea{
+    width: 90%;
+    height: 80px;
+}
+
+#post{
+    background-color: #0d7bff;
+    color: white;
+}
+
+.inputBox{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-color: #0d7bff;
+    /* outline none makes it so that when people click 
+    inside input box, no borders are shown */
+    outline: none;
+    width: 600px;
+}
+
+.follow{
+    background-color: #0d7bff;
+    color: white;
+}
+
+.post-content{
+    margin-left: 40px;
+}
+
+.edit{
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 25px;
+    width: 60px;
+}
+
+.editButtonSpace{
+    width: 200px;
+    height: 25px;
+}
+
+.nameNheart{
+    display: flex;
+}
+
+p{
+    margin:0;
+    margin-right: 20px;
+}
+
+.container {
+    flex-direction: column;
+    width: 100%;
+}
+.heart-like-button {
+    position: relative;
+    width: 40px;
+    height: 33px;
+    float: right;
+    margin-right: 10px;
+}
+.heart-like-button:before {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+    width: 20px;
+    height: 32px;
+    border-radius: 40px 40px 0 0;
+    background-color: #9e9c9b;
+    content: "";
+    cursor: pointer;
+    transition: background .4s;
+}
+.heart-like-button:after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin :100% 100%;
+    width: 20px;
+    height: 32px;
+    border-radius: 40px 40px 0 0;
+    background-color: #9e9c9b;
+    content: "";
+    cursor: pointer;
+    transition: background .4s;
+}
+
+.heart-like-button.liked::before,
+.heart-like-button.liked::after {
+  background-color: #d65076;
+}
+.heart-like-button.liked {
+  animation: liked .4s ease;
+}
+
+@keyframes liked {
+    0% {
+      transform: scale(.8);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }

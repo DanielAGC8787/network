@@ -1,0 +1,35 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class='post-space'>
+        <h1>Following Posts</h1>
+        </br>
+        {%with id_num=-1 %}
+        {%for post in page_obj %}
+            <div class="post">
+                <div class='post-content'>
+                    </br>
+                    <div class='nameNheart'>
+                        <a href="{% url "users" post.creator.username %}"><h2 style="font-size:20px;" >{{post.creator}}</h2></a>
+                        <div id="edit{{forloop.counter}}" class="editButtonSpace"></div>
+                        {% comment %} forloop.counter returns the number of times the loop has iterated {% endcomment %}
+                        <div class='container' id="container{{forloop.counter}}">
+                            
+                            {% comment %} <div class="heart-like-button" id ='heart{{id_num|add:"1"}}'></div> {% endcomment %}
+                        </div>
+                    </div>
+                    <p>{{post.body}}</p>
+                    <p style="color:#929292;">{{post.timeStamp}}</p>
+                    Likes: <p style = "display:inline" id="like{{forloop.counter}}">{{post.likes}}</p>
+                </div>
+            </div>
+        </br>
+        {%endfor%}
+        {%endwith%}
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/following.js' %}"></script>
+{% endblock %}
