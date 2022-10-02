@@ -13,5 +13,5 @@ extracted the project into. Lastly, run "python manage.py runserver" in order to
 
 ## Tools used
 
-I used Python and the Django framework for the backend and some of the templates (Django made it pretty easy to implement pagination), and all the data from each post was stored in the sqlite database that came with Django. From there, I just used plain Vanilla JS in order to do PUT, POST, andcDELETE methods from the client side. The rest is just HTML and CSS.
+I used Python and the Django framework for the backend and some of the templates (Django made it pretty easy to implement pagination), and all the data from each post was stored in the sqlite database that came with Django. From there, I just used plain Vanilla JS in order to do PUT, POST, and DELETE methods from the client side. The rest is just HTML and CSS.
 In addition to this, I also used the selenium webdriver in order to add a bunch of posts all at once, so that the pagination feature could be tested (you can find this in the test.py file).
